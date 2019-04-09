@@ -1,0 +1,22 @@
+<package>
+  <name>hydrone_gazebo</name>
+  <version>0.1.0</version>
+  <description>hydrone_gazebo</description>
+  <maintainer email="ricardogrando13@gmail.com">Ricardo Grando</maintainer>
+
+  <license>BSD</license>
+
+  <author email="ricardogrando13@gmail.com">Ricardo Grando</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>gazebo_plugins</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>gazebo_ros_control</run_depend>
+  <run_depend>hydrone_control</run_depend>
+  <run_depend>hydrone_description</run_depend>
+  <run_depend>xacro</run_depend>
+
+  <export>
+  </export>
+</package>
