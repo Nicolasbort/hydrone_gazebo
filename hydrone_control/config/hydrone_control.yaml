@@ -5,19 +5,51 @@ hydrone:
     publish_rate: 50  
   
   # Position Controllers ---------------------------------------
-  rotation_position_controller:
-    type: effort_controllers/JointPositionController
-    joint: rotation
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  joint1_position_controller:
-    type: effort_controllers/JointPositionController
-    joint: joint1
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  joint2_position_controller:
-    type: effort_controllers/JointPositionController
-    joint: joint2
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  jointEnd_position_controller:
-    type: effort_controllers/JointPositionController
-    joint: end_effector_joint
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_aerial_propeller_1_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aerial_propeller_1
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aerial_propeller_2_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aerial_propeller_2
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aerial_propeller_3_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aerial_propeller_3
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aerial_propeller_4_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aerial_propeller_4
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aquatic_propeller_1_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aquatic_propeller_1
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aquatic_propeller_2_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aquatic_propeller_2
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aquatic_propeller_3_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aquatic_propeller_3
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  joint_aquatic_propeller_4_controller:
+    type: effort_controllers/JointVelocityController
+    joint: joint_aquatic_propeller_4
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+
+
+
+    
+  # joint1_position_controller:
+  #   type: effort_controllers/JointPositionController
+  #   joint: joint1
+  #   pid: {p: 100.0, i: 0.01, d: 10.0}
+  # joint2_position_controller:
+  #   type: effort_controllers/JointPositionController
+  #   joint: joint2
+  #   pid: {p: 100.0, i: 0.01, d: 10.0}
+  # jointEnd_position_controller:
+  #   type: effort_controllers/JointPositionController
+  #   joint: end_effector_joint
+  #   pid: {p: 100.0, i: 0.01, d: 10.0}

@@ -6,10 +6,14 @@
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
 	output="screen" ns="/hydrone" args="joint_state_controller
-            rotation_position_controller
-					  joint1_position_controller
-					  joint2_position_controller
-            jointEnd_position_controller"/>
+            joint_aerial_propeller_1_controller
+            joint_aerial_propeller_2_controller
+            joint_aerial_propeller_3_controller
+            joint_aerial_propeller_4_controller
+            joint_aquatic_propeller_1_controller
+            joint_aquatic_propeller_2_controller
+            joint_aquatic_propeller_4_controller            
+					  "/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"

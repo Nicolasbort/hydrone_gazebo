@@ -9,19 +9,135 @@
     </plugin>
   </gazebo>
 
-  <!-- Link1 -->
-  <gazebo reference="link1">
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <!-- Link2 -->
-  <gazebo reference="link2">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
+  <gazebo reference="hydrone_base">
     <material>Gazebo/White</material>
   </gazebo>
+   
+  <gazebo reference="hydrone_aerial_propeller_1">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
 
-  <!-- Link3 -->
+  <gazebo reference="hydrone_aerial_propeller_2">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aerial_propeller_3">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aerial_propeller_4">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aquatic_propeller_1">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aquatic_propeller_2">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aquatic_propeller_3">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="hydrone_aquatic_propeller_4">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="rotor_0_blade_1" filename="libLiftDragPlugin.so">
+        <a0>0.1</a0>
+        <alpha_stall>1.4</alpha_stall>
+        <cla>0.2500</cla>
+        <cda>0.10</cda>
+        <cma>0.00</cma>
+        <cla_stall>-0.025</cla_stall>
+        <cda_stall>0.0</cda_stall>
+        <cma_stall>0.0</cma_stall>
+        <area>0.2</area>
+        <air_density>1.2041</air_density>
+        <cp>0.084 0 0</cp>
+        <forward>0 1 0</forward>
+        <upward>0 0 1</upward>
+        <link_name>hydrone::hydrone_aerial_propeller_1</link_name>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="rotor_0_blade_2" filename="libLiftDragPlugin.so">
+        <a0>0.1</a0>
+        <alpha_stall>1.4</alpha_stall>
+        <cla>0.2500</cla>
+        <cda>0.10</cda>
+        <cma>0.00</cma>
+        <cla_stall>-0.025</cla_stall>
+        <cda_stall>0.0</cda_stall>
+        <cma_stall>0.0</cma_stall>
+        <area>0.2</area>
+        <air_density>1.2041</air_density>
+        <cp>0.084 0 0</cp>
+        <forward>0 1 0</forward>
+        <upward>0 0 1</upward>
+        <link_name>hydrone::hydrone_aerial_propeller_2</link_name>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="rotor_0_blade_3" filename="libLiftDragPlugin.so">
+        <a0>0.1</a0>
+        <alpha_stall>1.4</alpha_stall>
+        <cla>0.2500</cla>
+        <cda>0.10</cda>
+        <cma>0.00</cma>
+        <cla_stall>-0.025</cla_stall>
+        <cda_stall>0.0</cda_stall>
+        <cma_stall>0.0</cma_stall>
+        <area>0.2</area>
+        <air_density>1.2041</air_density>
+        <cp>0.084 0 0</cp>
+        <forward>0 1 0</forward>
+        <upward>0 0 1</upward>
+        <link_name>hydrone::hydrone_aerial_propeller_3</link_name>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="rotor_0_blade_4" filename="libLiftDragPlugin.so">
+        <a0>0.1</a0>
+        <alpha_stall>1.4</alpha_stall>
+        <cla>0.2500</cla>
+        <cda>0.10</cda>
+        <cma>0.00</cma>
+        <cla_stall>-0.025</cla_stall>
+        <cda_stall>0.0</cda_stall>
+        <cma_stall>0.0</cma_stall>
+        <area>0.2</area>
+        <air_density>1.2041</air_density>
+        <cp>0.084 0 0</cp>
+        <forward>0 1 0</forward>
+        <upward>0 0 1</upward>
+        <link_name>hydrone::hydrone_aerial_propeller_4</link_name>
+    </plugin>
+  </gazebo>
+
+  <!-- 
   <gazebo reference="link3">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
@@ -32,6 +148,5 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Red</material>
-  </gazebo>
-
+  </gazebo> -->
 </robot>

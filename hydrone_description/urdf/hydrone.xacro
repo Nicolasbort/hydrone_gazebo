@@ -3,13 +3,7 @@
 <robot name="hydrone" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Constants for robot dimensions -->
-  <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
-  <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
-  <xacro:property name="height1" value="2" /> <!-- Link 1 -->
-  <xacro:property name="height2" value="1" /> <!-- Link 2 -->
-  <xacro:property name="height3" value="1" /> <!-- Link 3 -->
-  <xacro:property name="axel_offset" value="0.0" /> <!-- Space btw top of beam and the each joint -->
+  <xacro:property name="PI" value="3.1415926535897931"/> 
 
   <!-- Import all Gazebo-customization elements, including Gazebo colors -->
   <xacro:include filename="$(find hydrone_description)/urdf/hydrone.gazebo" />
@@ -19,50 +13,456 @@
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world"/>
 
-  <joint name="rotation" type="continuous">
+  <joint name="fixed_world" type="fixed">
     <parent link="world"/>
-    <child link="link1"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <dynamics damping="0.7"/>
+    <child link="hydrone_base"/>   
   </joint>
 
   <!-- Base Link -->
-  <link name="link1">
+  <link name="hydrone_base">
     <collision>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <origin xyz="-0.2175 0.2175 0.05" rpy="1.5707 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height1}"/>
+        <mesh filename="package://hydrone_description/urdf/meshes/hydrone_base.dae" scale="0.001 0.001 0.001"/>        
+        <!-- <box size="0.44 0.44 0.05"/> -->
+      </geometry>
+    </collision>
+
+    <collision>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry>       
+        <box size="0.1 0.1 0.1"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <origin xyz="-0.2175 0.2175 0.05" rpy="1.5707 0 0"/>
       <geometry>
-	<box size="${width} ${width} ${height1}"/>
+        <mesh filename="package://hydrone_description/urdf/meshes/hydrone_base.dae" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="orange"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
-      <mass value="${mass}"/>
+      <origin xyz="0 0 0.115" rpy="0 0 0"/>
+      <mass value="1.42887"/>
+      <!-- <inertia
+        ixx="0.014464898" ixy="0.0" ixz="0.0"
+        iyy="0.028817961" iyz="0.0"
+        izz="0.015410484"/> -->
       <inertia
-	  ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
-	  iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
-	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+      </inertial>
+  </link>
+
+  <joint name="joint_aerial_propeller_1" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aerial_propeller_1"/>
+    <origin xyz="0.19725 -0.19725 0.14" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  
+  <link name="hydrone_aerial_propeller_1">
+    <collision>
+      <origin xyz="-0.0205 -0.1905 0.01" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.0205 -0.1905 0.01" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.2"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
     </inertial>
   </link>
 
-  <joint name="joint1" type="continuous">
-    <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.7"/>
+  <transmission name="rot1_ae">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aerial_propeller_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1_ae">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+  <joint name="joint_aerial_propeller_2" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aerial_propeller_2"/>
+    <origin xyz="0.19725 0.19725 0.14" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
   </joint>
 
-  <!-- Middle Link -->
+  
+  <link name="hydrone_aerial_propeller_2">
+    <collision>
+      <origin xyz="-0.0205 -0.1905 0.0075" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.0205 -0.1905 0.0075" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.2"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot2_ae">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aerial_propeller_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2_ae">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+  <joint name="joint_aerial_propeller_3" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aerial_propeller_3"/>
+    <origin xyz="-0.19725 0.19725 0.14" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  
+  <link name="hydrone_aerial_propeller_3">
+    <collision>
+      <origin xyz="-0.0205 -0.1905 0.01" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.0205 -0.1905 0.01" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.2"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot3_ae">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aerial_propeller_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3_ae">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <joint name="joint_aerial_propeller_4" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aerial_propeller_4"/>
+    <origin xyz="-0.19725 -0.19725 0.14" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  
+  <link name="hydrone_aerial_propeller_4">
+    <collision>
+      <origin xyz="-0.0205 -0.1905 0.0075" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.0205 -0.1905 0.0075" rpy="-1.5707 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aerial_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.2"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot4_ae">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aerial_propeller_4">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor4_ae">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+
+
+  <joint name="joint_aquatic_propeller_1" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aquatic_propeller_1"/>
+    <origin xyz="0.19725 -0.19725 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint> 
+  
+  <link name="hydrone_aquatic_propeller_1">
+    <collision>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot1_aq">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aquatic_propeller_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1_aq">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+  <joint name="joint_aquatic_propeller_2" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aquatic_propeller_2"/>
+    <origin xyz="0.19725 0.19725 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint> 
+  
+  <link name="hydrone_aquatic_propeller_2">
+    <collision>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot2_aq">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aquatic_propeller_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2_aq">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <joint name="joint_aquatic_propeller_3" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aquatic_propeller_3"/>
+    <origin xyz="-0.19725 0.19725 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint> 
+  
+  <link name="hydrone_aquatic_propeller_3">
+    <collision>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller_1.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot3_aq">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aquatic_propeller_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3_aq">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <joint name="joint_aquatic_propeller_4" type="continuous">
+    <parent link="hydrone_base"/>
+    <child link="hydrone_aquatic_propeller_4"/>
+    <origin xyz="-0.19725 -0.19725 0.055" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <anchor xyz="0 0 0"/>
+    <limit effort="10" velocity="10000"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint> 
+  
+  <link name="hydrone_aquatic_propeller_4">
+    <collision>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="-0.03 -0.0315 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://hydrone_description/urdf/meshes/aquatic_propeller.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0.0" rpy="0 0 0"/>
+      <mass value="0.02"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <transmission name="rot4_aq">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_aquatic_propeller_4">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor4_aq">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>75.0676691729</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+
+
+
+
+
+
+
+  <!--
   <link name="link2">
     <collision>
       <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
@@ -96,8 +496,7 @@
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
-
-  <!-- Top Link -->
+  
   <link name="link3">
     <collision>
       <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
@@ -124,7 +523,6 @@
     </inertial>
   </link>
 
-  <!-- left end effector -->
   <joint name="end_effector_joint" type="continuous">
     <origin xyz="0 0 ${height3 - axel_offset}" rpy="0 0 0"/>
     <parent link="link3"/>
@@ -133,7 +531,6 @@
     <dynamics damping="0.7"/>
   </joint> 
 
-  <!-- left end effector link -->
   <link name="end_effector">    
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -192,6 +589,17 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
+  </transmission> -->
+
+  <!-- <transmission name="tranEnd">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="end_effector_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motorEnd">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission> -->
 
 </robot>
